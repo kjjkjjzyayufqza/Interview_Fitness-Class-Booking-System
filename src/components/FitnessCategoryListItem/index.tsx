@@ -2,6 +2,7 @@ import { Grid2, Box, Typography, Button } from '@mui/material'
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 import FitnessClassListItem from '../FitnessClassListItem';
 import { FitnessClassDetailModel } from '../../Model';
+import { useEffect, useState } from 'react';
 
 export interface FitnessCategoryListItemProps {
     title: string;
@@ -14,6 +15,19 @@ export interface FitnessCategoryListItemProps {
 export default function FitnessCategoryListItem({
     title, description, img, data, bgColor
 }: FitnessCategoryListItemProps) {
+
+    const [fitnessClassListData, setFitnessClassListData] = useState<FitnessClassDetailModel[]>([]);
+    useEffect(() => {
+        if (data) {
+            const availableClasses: FitnessClassDetailModel[] = [];
+            data.map((fitnessClassDetail, i) => {
+                if (fitnessClassDetail.category === title)
+                    availableClasses.push(fitnessClassDetail);
+            })
+            setFitnessClassListData(availableClasses);
+        }
+    },[])
+
     return (
         <Grid2 container sx={{ width: '100%', bgcolor: bgColor ?? '#323232' }} spacing={1}>
             <Grid2 container size={{ sm: 12, md: 6 }} sx={{ display: 'flex' }}>
@@ -56,15 +70,20 @@ export default function FitnessCategoryListItem({
                 <Box sx={{
                     flexDirection: 'row', display: 'flex', justifyContent: 'flex-start', padding: 0,
                     width: '100%',
-                    overflowX: 'scroll',
+                    overflowX: 'auto',
                 }}>
-                    {data.map((fitnessClassDetail, i) => {
+                    {fitnessClassListData.map((fitnessClassDetail, i) => {
                         return <Box key={i} minWidth={345}>
                             <FitnessClassListItem
                                 data={fitnessClassDetail}
                             />
                         </Box>
                     })}
+                    {fitnessClassListData.length === 0 && <Box>
+                        <Typography variant="body1" gutterBottom>
+                            No classes available
+                        </Typography>
+                    </Box>}
                 </Box>
             </Grid2>
         </Grid2>
