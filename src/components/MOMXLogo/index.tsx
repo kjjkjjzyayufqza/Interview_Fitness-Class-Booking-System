@@ -10,7 +10,9 @@ export default function MOMXLogo() {
                 py: 1,
                 borderRadius: 1,
             }}>
-            <Typography variant="h2">
+            <Typography sx={{
+                fontSize: { xs: 20, md: 30 },
+            }}>
                 MOMX
             </Typography>
         </Box>
