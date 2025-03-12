@@ -5,19 +5,20 @@ import MOMXLogo from './MOMXLogo'
 import { Link, redirect, useNavigate } from 'react-router'
 import { isExpired } from 'react-jwt'
 import { toast } from 'react-toastify'
+import useUserIsLogin from '../hook/getUserIsLogin'
 
 export default function HeaderBar() {
-    const [isShowLoginButton, setIsShowLoginButton] = useState<boolean>(true);
-    const [isLogin, setIsLogin] = useState<boolean>(false);
-    useEffect(() => {
-        const accessToken = localStorage.getItem('accessToken');
-        const tokenExp = isExpired(accessToken ? accessToken : '');
-        if (accessToken && !tokenExp) {
-            setIsShowLoginButton(false);
-            setIsLogin(true);
-        }
-    }, [])
+    const { isLoggedIn, reCheckLogin } = useUserIsLogin();
     let navigate = useNavigate();
+
+    useEffect(() => {
+        if (isLoggedIn === null) return;
+        if (!isLoggedIn) {
+            //clear token
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('refreshToken');
+        }
+    }, [isLoggedIn])
 
     return (
         <Grid2 container sx={{
@@ -38,7 +39,7 @@ export default function HeaderBar() {
                         component={Link}
                         sx={{ color: '#ffffff' }}
                         to="/">Fitness Class</Button>
-                    {isLogin &&
+                    {isLoggedIn &&
                         <Button
                             color="inherit"
                             component={Link}
@@ -57,13 +58,12 @@ export default function HeaderBar() {
                     alignItems: 'center',
                     mt: { xs: 2, md: 0 },
                 }}>
-                    {isShowLoginButton ? <LoginModal onSuccessLogin={() => {
+                    {!isLoggedIn ? <LoginModal onSuccessLogin={() => {
                         toast.success("Login Success", {
                             autoClose: 2000
                         })
-                        setIsShowLoginButton(false);
-                        setIsLogin(true);
                         navigate('/Dashboard');
+                        reCheckLogin();
                     }} /> : <Button color="inherit"
                         onClick={() => {
                             toast.success("Logout Success", {
@@ -71,9 +71,8 @@ export default function HeaderBar() {
                             })
                             localStorage.removeItem('accessToken');
                             localStorage.removeItem('refreshToken');
-                            setIsShowLoginButton(true);
-                            setIsLogin(false);
                             navigate('/');
+                            reCheckLogin();
                         }}
                     >Logout</Button>}
                 </Box>

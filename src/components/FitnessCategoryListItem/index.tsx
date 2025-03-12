@@ -15,7 +15,6 @@ export interface FitnessCategoryListItemProps {
 export default function FitnessCategoryListItem({
     title, description, img, data, bgColor
 }: FitnessCategoryListItemProps) {
-
     const [fitnessClassListData, setFitnessClassListData] = useState<FitnessClassDetailModel[]>([]);
     useEffect(() => {
         if (data) {

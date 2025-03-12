@@ -30,6 +30,7 @@ export default function LoginModal({ onSuccessLogin = () => { }, onOpen = () => 
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    // set the default login info in value
     const [loginInfo, setLoginInfo] = useState({
         username: 'emilys',
         password: 'emilyspass'

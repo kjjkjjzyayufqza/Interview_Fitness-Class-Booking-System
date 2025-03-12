@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { decodeToken, isExpired } from 'react-jwt';
 
 const useUserIsLogin = (): {
-    isLoggedIn: boolean,
-    userData: any
+    isLoggedIn: boolean | null,
+    userData: any,
+    reCheckLogin: () => void
 } => {
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
     const [userData, setUserData] = useState<any>({});
-    useEffect(() => {
+
+    const reCheckLogin = () => {
         const token = localStorage.getItem('accessToken');
         if (token && !isExpired(token)) {
             setIsLoggedIn(true);
@@ -15,9 +17,13 @@ const useUserIsLogin = (): {
         } else {
             setIsLoggedIn(false);
         }
+    }
+
+    useEffect(() => {
+        reCheckLogin();
     }, []);
 
-    return { isLoggedIn, userData };
+    return { isLoggedIn, userData, reCheckLogin };
 };
 
 export default useUserIsLogin;

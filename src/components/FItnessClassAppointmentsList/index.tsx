@@ -1,6 +1,5 @@
-import { Box, Typography, Button, Avatar, Card, CardActions, CardContent, CardHeader, CardMedia, IconButton, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
-import { red } from '@mui/material/colors'
-import React, { useEffect, useState } from 'react'
+import { Box, Typography, Button, Avatar, Card, CardActions, CardContent, CardHeader, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router'
 import { FitnessClassAppointmentModel, FitnessClassDetailModel, FitnessClassDisplayAppointmentModel } from '../../Model'
 import axios from 'axios'
@@ -67,7 +66,6 @@ export default function FItnessClassAppointmentsList() {
         try {
             // get appointment
             const appointment = appointments.find(appointment => appointment.id == appointmentId);
-            console.log(appointments);
             if (!appointment) return;
             // get fitness class
             const fitnessClass = await axios.get(`http://localhost:3001/fitnessClass/${appointment.fitnessClassId}`).then(res => res.data);

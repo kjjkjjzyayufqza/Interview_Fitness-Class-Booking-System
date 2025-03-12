@@ -1,7 +1,4 @@
-import { Box, Button, Container, Typography } from '@mui/material'
-import React from 'react'
-import FitnessCategoryList from '../FitnessCategoryList'
-import { Link } from 'react-router'
+import { Box, Container } from '@mui/material'
 import FItnessClassAppointmentsList from '../FItnessClassAppointmentsList'
 
 export default function Dashboard() {

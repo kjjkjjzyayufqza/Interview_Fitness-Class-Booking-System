@@ -15,6 +15,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <BrowserRouter>
+    {/* Toast Container */}
     <ToastContainer
       position="top-center"
       autoClose={5000}
@@ -30,6 +31,7 @@ root.render(
     <Routes>
       <Route element={<Layout />}>
         <Route index path="/" element={<App />} />
+        {/* Protected Routes for check user is login*/}
         <Route element={<ProtectedRoutes />}>
           <Route index path="/Dashboard" element={<Dashboard />} />
         </Route>

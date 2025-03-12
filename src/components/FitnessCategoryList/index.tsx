@@ -4,6 +4,7 @@ import { Box, Grid2 } from '@mui/material'
 import FitnessCategoryListItem from '../FitnessCategoryListItem'
 import axios from 'axios'
 
+// Fake data for fitness category, if need can be replaced with API data
 const fakeCategory: FitnessCategoryModel = {
     'BARRE': {
         'title': 'BARRE',
@@ -44,7 +45,6 @@ const fakeCategory: FitnessCategoryModel = {
 
 
 export default function FitnessCategoryList() {
-
     const [fitnessClassListData, setFitnessClassListData] = useState<FitnessClassDetailModel[]>([]);
     const handleGetFitnessClassList = () => {
         axios.get('http://localhost:3001/fitnessClass')
@@ -55,11 +55,9 @@ export default function FitnessCategoryList() {
                 console.log(err);
             })
     }
-
     useEffect(() => {
         handleGetFitnessClassList();
     }, [])
-
     return (
         <Grid2 container spacing={5}>
             {Object.keys(fakeCategory).map((category, i) => {

@@ -13,6 +13,18 @@ export default function FitnessClassListItem({ data }: {
     let navigate = useNavigate();
     const { isLoggedIn, userData } = useUserIsLogin();
     const handleBookingFitnessClass = async () => {
+        if (!isLoggedIn) {
+            toast.error('You need login before booking', {
+                autoClose: 1000,
+            })
+            return;
+        }
+        if (!userData.id) {
+            toast.error('User not found', {
+                autoClose: 1000,
+            })
+            return;
+        }
         const newData: FitnessClassAppointmentModel = {
             id: Math.random().toString(36).substring(7),
             userId: userData.id,
@@ -20,7 +32,6 @@ export default function FitnessClassListItem({ data }: {
             date: data.date,
             createDate: new Date()
         }
-
         try {
             // get latest remaining number
             const fitnessClassResponse = await axios.get(`http://localhost:3001/fitnessClass/${data.id}`);
@@ -47,12 +58,9 @@ export default function FitnessClassListItem({ data }: {
                     }
                 })
             }
-
         } catch (err) {
             console.error(err);
         }
-
-
     }
     return (
         <ListItem alignItems='flex-start' sx={{ padding: 0 }}>

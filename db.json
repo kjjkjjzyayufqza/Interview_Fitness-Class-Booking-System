@@ -5,7 +5,7 @@
       "category": "BARRE",
       "date": "2025-03-15T10:00:00Z",
       "time": "10:00(45min)",
-      "remaining": 1,
+      "remaining": 5,
       "location": "Kwun Tong APM Studio",
       "instructor": "James Smith",
       "img": "/images/ft_JamesSmith.png"
@@ -15,7 +15,7 @@
       "category": "BARRE",
       "date": "2025-03-15T12:00:00Z",
       "time": "12:00(45min)",
-      "remaining": 2,
+      "remaining": 0,
       "location": "Central Fitness Studio",
       "instructor": "Alex Rodriguez",
       "img": "/images/ft_AlexRodriguez.png"
@@ -25,7 +25,7 @@
       "category": "BARRE",
       "date": "2025-03-16T12:00:00Z",
       "time": "11:00(45min)",
-      "remaining": 0,
+      "remaining": 5,
       "location": "Central Fitness Studio",
       "instructor": "Alex Rodriguez",
       "img": "/images/ft_AlexRodriguez.png"
@@ -35,7 +35,7 @@
       "category": "CYCSYNC",
       "date": "2025-03-16T09:00:00Z",
       "time": "09:00(60min)",
-      "remaining": 0,
+      "remaining": 2,
       "location": "Tsim Sha Tsui Cycle Studio",
       "instructor": "Michael Johnson",
       "img": "/images/ft_MichaelJohnson.png"
@@ -101,13 +101,5 @@
       "img": "/images/ft_SamuelGonzalez.png"
     }
   ],
-  "appointments": [
-    {
-      "id": "7sg78",
-      "userId": 1,
-      "fitnessClassId": "BARRE1",
-      "date": "2025-03-15T10:00:00Z",
-      "createDate": "2025-03-12T08:19:55.685Z"
-    }
-  ]
+  "appointments": []
 }
