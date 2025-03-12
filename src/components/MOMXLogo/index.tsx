@@ -10,11 +10,12 @@ export default function MOMXLogo() {
                 py: 1,
                 borderRadius: 1,
             }}>
-            <Typography sx={{
-                fontSize: { xs: 20, md: 30 },
-            }}>
+            <Box
+                sx={{
+                    fontSize: { xs: 20, md: 30 },
+                }}>
                 MOMX
-            </Typography>
+            </Box>
         </Box>
     )
 }

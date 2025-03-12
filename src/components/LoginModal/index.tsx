@@ -7,7 +7,6 @@ import { useEffect, useState } from 'react';
 import { FormControl, InputLabel, Input, FormHelperText, SxProps } from '@mui/material';
 import MOMXLogo from '../MOMXLogo';
 import axios from 'axios';
-import RegisterModal from '../RegisterModal';
 
 const style: SxProps = {
     position: 'absolute',
@@ -24,25 +23,35 @@ const style: SxProps = {
 interface LoginModalProps {
     onOpen?: () => void;
     onClose?: () => void;
+    onSuccessLogin?: () => void;
 }
 
-export default function LoginModal({ onClose = () => { }, onOpen = () => { }, }: LoginModalProps) {
+export default function LoginModal({ onSuccessLogin = () => { }, onOpen = () => { }, }: LoginModalProps) {
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
     const [loginInfo, setLoginInfo] = useState({
-        username: '',
-        password: ''
+        username: 'emilys',
+        password: 'emilyspass'
     });
+    const [errorMsg, setErrorMsg] = useState('');
+    const [callingLogin, setCallingLogin] = useState(false);
 
     const handleLogin = () => {
+        setErrorMsg('')
+        setCallingLogin(true);
         axios.post('https://dummyjson.com/auth/login', {
             username: loginInfo.username,
             password: loginInfo.password
         }).then((response) => {
-            console.log(response);
+            handleClose();
+            localStorage.setItem('accessToken', response.data.accessToken);
+            localStorage.setItem('refreshToken', response.data.refreshToken);
+            onSuccessLogin()
+            setCallingLogin(false);
         }).catch((error) => {
-            console.log(error);
+            setErrorMsg('Invalid username or password');
+            setCallingLogin(false);
         });
     }
 
@@ -84,15 +93,12 @@ export default function LoginModal({ onClose = () => { }, onOpen = () => { }, }:
                                 Your password
                             </FormHelperText>
                         </FormControl>
-                        <Button variant="contained" sx={{ mt: 2, color: '#ffffff', bgcolor: '#000000' }} fullWidth onClick={handleLogin}>
+                        <Button variant="contained" sx={{ mt: 2, color: '#ffffff', bgcolor: '#000000' }} fullWidth onClick={handleLogin} loading={callingLogin}>
                             Login
                         </Button>
-                        <Box sx={{ mt: 2, textAlign: 'center' }}>
-                            <Typography variant="body2" >
-                                Don't have an account?
-                            </Typography>
-                            <RegisterModal />
-                        </Box>
+                        <Typography color="error" variant="caption" sx={{ mt: 2 }}>
+                            {errorMsg}
+                        </Typography>
                     </Box>
                 </Box>
             </Modal>

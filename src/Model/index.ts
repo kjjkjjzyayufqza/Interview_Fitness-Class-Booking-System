@@ -16,3 +16,15 @@ export interface FitnessCategoryModel {
     img: string;
   };
 }
+
+export interface FitnessClassAppointmentModel {
+  id: string;
+  userId: string;
+  fitnessClassId: string;
+  date: Date;
+  createDate: Date;
+}
+
+export interface FitnessClassDisplayAppointmentModel extends FitnessClassDetailModel {
+  appointmentId: string;
+}

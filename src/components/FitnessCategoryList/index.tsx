@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { FitnessCategoryModel, FitnessClassDetailModel } from '../../Model'
 import { Box, Grid2 } from '@mui/material'
 import FitnessCategoryListItem from '../FitnessCategoryListItem'
+import axios from 'axios'
 
 const fakeCategory: FitnessCategoryModel = {
     'BARRE': {
@@ -42,111 +43,23 @@ const fakeCategory: FitnessCategoryModel = {
 }
 
 
-const fakeData: FitnessClassDetailModel[] = [
-    {
-        'id': 'BARRE1',
-        'category': 'BARRE',
-        'date': new Date('2025-03-15T10:00:00Z'),
-        'time': '10:00(45min)',
-        'remaining': 10,
-        'location': 'Kwun Tong APM Studio',
-        'instructor': 'James Smith',
-        'img': '/images/ft_JamesSmith.png'
-    },
-    {
-        'id': 'BARRE2',
-        'category': 'BARRE',
-        'date': new Date('2025-03-15T12:00:00Z'),
-        'time': '12:00(45min)',
-        'remaining': 5,
-        'location': 'Central Fitness Studio',
-        'instructor': 'Alex Rodriguez',
-        'img': '/images/ft_AlexRodriguez.png'
-    },
-    {
-        'id': 'BARRE2',
-        'category': 'BARRE',
-        'date': new Date('2025-03-16T12:00:00Z'),
-        'time': '11:00(45min)',
-        'remaining': 20,
-        'location': 'Central Fitness Studio',
-        'instructor': 'Alex Rodriguez',
-        'img': '/images/ft_AlexRodriguez.png'
-    },
-    {
-        'id': 'CYCSYNC1',
-        'category': 'CYCSYNC',
-        'date': new Date('2025-03-16T09:00:00Z'),
-        'time': '09:00(60min)',
-        'remaining': 8,
-        'location': 'Tsim Sha Tsui Cycle Studio',
-        'instructor': 'Michael Johnson',
-        'img': '/images/ft_MichaelJohnson.png'
-    },
-    {
-        'id': 'BODYATTACK1',
-        'category': 'BODYATTACK',
-        'date': new Date('2025-03-17T18:00:00Z'),
-        'time': '18:00(45min)',
-        'remaining': 15,
-        'location': 'Causeway Bay Fitness Center',
-        'instructor': 'Chris Brown',
-        'img': '/images/ft_ChrisBrown.png'
-    },
-    {
-        'id': 'GRITCORE1',
-        'category': 'GRIT + CORE',
-        'date': new Date('2025-03-18T16:00:00Z'),
-        'time': '16:00(30min)',
-        'remaining': 5,
-        'location': 'Sheung Wan Training Hub',
-        'instructor': 'Joshua Jones',
-        'img': '/images/ft_JoshuaJones.png'
-    },
-    {
-        'id': 'BODYBALANCE1',
-        'category': 'BODYBALANCE',
-        'date': new Date('2025-03-19T14:00:00Z'),
-        'time': '14:00(60min)',
-        'remaining': 10,
-        'location': 'Sai Ying Pun Wellness Studio',
-        'instructor': 'Matthew Garcia',
-        'img': '/images/ft_MatthewGarcia.png'
-    },
-    {
-        'id': 'FULLBODY1',
-        'category': 'FULL-BODY WORKOUT',
-        'date': new Date('2025-03-20T13:00:00Z'),
-        'time': '13:00(60min)',
-        'remaining': 20,
-        'location': 'Happy Valley Fitness Club',
-        'instructor': 'Ethan Martinez',
-        'img': '/images/ft_EthanMartinez.png'
-    },
-    {
-        'id': 'CYCSYNC2',
-        'category': 'CYCSYNC',
-        'date': new Date('2025-03-21T17:00:00Z'),
-        'time': '17:00(60min)',
-        'remaining': 6,
-        'location': 'Wan Chai Cycling Studio',
-        'instructor': 'Benjamin Hernandez',
-        'img': '/images/ft_BenjaminHernandez.png'
-    },
-    {
-        'id': 'BODYATTACK2',
-        'category': 'BODYATTACK',
-        'date': new Date('2025-03-23T19:00:00Z'),
-        'time': '19:00(45min)',
-        'remaining': 12,
-        'location': 'Tung Chung Fitness Arena',
-        'instructor': 'Samuel Gonzalez',
-        'img': '/images/ft_SamuelGonzalez.png'
-    }
-];
-
-
 export default function FitnessCategoryList() {
+
+    const [fitnessClassListData, setFitnessClassListData] = useState<FitnessClassDetailModel[]>([]);
+    const handleGetFitnessClassList = () => {
+        axios.get('http://localhost:3001/fitnessClass')
+            .then(res => {
+                setFitnessClassListData(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            })
+    }
+
+    useEffect(() => {
+        handleGetFitnessClassList();
+    }, [])
+
     return (
         <Grid2 container spacing={5}>
             {Object.keys(fakeCategory).map((category, i) => {
@@ -155,7 +68,7 @@ export default function FitnessCategoryList() {
                         title={fakeCategory[category].title}
                         description={fakeCategory[category].description}
                         img={fakeCategory[category].img}
-                        data={fakeData}
+                        data={fitnessClassListData}
                         bgColor={i % 2 === 0 ? '#323232' : '#505050'}
                     />
                 </Grid2>

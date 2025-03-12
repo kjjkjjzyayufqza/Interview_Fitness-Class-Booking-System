@@ -6,15 +6,33 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route } from "react-router";
 import Layout from './layout/Layout';
 import '@fontsource/roboto/500.css';
+import Dashboard from './components/Dashboard';
+import ProtectedRoutes from './components/ProtectedRoutes';
+import { ToastContainer } from 'react-toastify';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
   <BrowserRouter>
+    <ToastContainer
+      position="top-center"
+      autoClose={5000}
+      hideProgressBar
+      newestOnTop={false}
+      closeOnClick={false}
+      rtl={false}
+      pauseOnFocusLoss
+      draggable
+      pauseOnHover={false}
+      theme="light"
+    />
     <Routes>
       <Route element={<Layout />}>
         <Route index path="/" element={<App />} />
+        <Route element={<ProtectedRoutes />}>
+          <Route index path="/Dashboard" element={<Dashboard />} />
+        </Route>
       </Route>
     </Routes>
   </BrowserRouter>

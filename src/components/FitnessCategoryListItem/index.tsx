@@ -26,7 +26,7 @@ export default function FitnessCategoryListItem({
             })
             setFitnessClassListData(availableClasses);
         }
-    },[])
+    }, [data])
 
     return (
         <Grid2 container sx={{ width: '100%', bgcolor: bgColor ?? '#323232' }} spacing={1}>
