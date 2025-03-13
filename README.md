@@ -29,6 +29,10 @@ Once the dependencies are installed, start the development server by running:
 ```bash
 pnpm start
 ```
+OR
+```bash
+pnpm run startWithJsonServer
+```
 
 ### Step 3: Start the Jason Server
 
