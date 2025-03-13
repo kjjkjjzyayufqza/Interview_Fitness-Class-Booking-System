@@ -6,6 +6,7 @@ import axios from 'axios'
 import useUserIsLogin from '../../hook/getUserIsLogin'
 import dayjs from 'dayjs'
 import { toast } from 'react-toastify'
+import FItnessClassAppointmentsListItem from '../FItnessClassAppointmentsListItem'
 
 export default function FItnessClassAppointmentsList() {
 
@@ -14,6 +15,7 @@ export default function FItnessClassAppointmentsList() {
     const { userData } = useUserIsLogin();
     const [openCancelConfirmDialog, setOpenCancelConfirmDialog] = useState<boolean>(false);
     const [selectedAppointmentId, setSelectedAppointmentId] = useState<string>();
+    const [isCancelingAppointment, setIsCancelingAppointment] = useState<boolean>(false);
 
     const handleCancelDialog = () => {
         setOpenCancelConfirmDialog(false);
@@ -25,40 +27,42 @@ export default function FItnessClassAppointmentsList() {
 
     const handleGetAppointments = async () => {
         // get appointments
-        if (!userData?.id) return;
-        let appointments: FitnessClassAppointmentModel[] = [];
-        axios.get('http://localhost:3001/appointments', {
-            params: {
-                userId: userData?.id
-            }
-        })
-            .then(res => {
-                setAppointments(res.data);
-                appointments = res.data;
-            })
-            .catch(err => {
-                console.error(err);
-            })
-        const fitnessClass: FitnessClassDetailModel[] = await axios.get('http://localhost:3001/fitnessClass').then(res => res.data);
-
-        // mapping appointments with fitness class
-        let displayAppointments: FitnessClassDisplayAppointmentModel[] = [];
-        appointments.forEach(appointment => {
-            const fitnessClassData = fitnessClass.find(fitnessClass => fitnessClass.id === appointment.fitnessClassId);
-            if (fitnessClassData) {
-                const data = {
-                    appointmentId: appointment.id,
-                    ...fitnessClassData
+        try {
+            if (!userData?.id) return;
+            let appointments: FitnessClassAppointmentModel[] = [];
+            appointments = await axios.get('http://localhost:3001/appointments', {
+                params: {
+                    userId: userData?.id
                 }
-                displayAppointments.push(data);
+            }).then(res => res.data);
+            if (appointments.length == 0 || !appointments) {
+                setDisplayFitnessAppointment([]);
+                return;
             }
-        })
+            setAppointments(appointments);
+            const fitnessClass: FitnessClassDetailModel[] = await axios.get('http://localhost:3001/fitnessClass').then(res => res.data);
 
-        // sort by date
-        displayAppointments.sort((a, b) => {
-            return new Date(a.date).getTime() - new Date(b.date).getTime();
-        })
-        setDisplayFitnessAppointment(displayAppointments);
+            // mapping appointments with fitness class
+            let displayAppointments: FitnessClassDisplayAppointmentModel[] = [];
+            appointments.forEach(appointment => {
+                const fitnessClassData = fitnessClass.find(fitnessClass => fitnessClass.id === appointment.fitnessClassId);
+                if (fitnessClassData) {
+                    const data = {
+                        appointmentId: appointment.id,
+                        ...fitnessClassData
+                    }
+                    displayAppointments.push(data);
+                }
+            })
+
+            // sort by date
+            displayAppointments.sort((a, b) => {
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+            })
+            setDisplayFitnessAppointment(displayAppointments);
+        } catch (err) {
+            console.log(err);
+        }
     }
 
     const handleCancelAppointment = async () => {
@@ -67,6 +71,7 @@ export default function FItnessClassAppointmentsList() {
             // get appointment
             const appointment = appointments.find(appointment => appointment.id == appointmentId);
             if (!appointment) return;
+            setIsCancelingAppointment(true);
             // get fitness class
             const fitnessClass = await axios.get(`http://localhost:3001/fitnessClass/${appointment.fitnessClassId}`).then(res => res.data);
             // update remaining number
@@ -79,8 +84,10 @@ export default function FItnessClassAppointmentsList() {
                 autoClose: 1000
             })
             setOpenCancelConfirmDialog(false);
+            setIsCancelingAppointment(false);
         } catch (err) {
-            console.error(err);
+            console.log(err);
+            setIsCancelingAppointment(false);
         }
     }
 
@@ -125,69 +132,31 @@ export default function FItnessClassAppointmentsList() {
                     </DialogContentText>
                 </DialogContent>
                 <DialogActions>
-                    <Button onClick={handleCancelDialog}>Cancel</Button>
+                    <Button onClick={handleCancelDialog}
+                        disabled={isCancelingAppointment}
+                    >Cancel</Button>
                     <Button onClick={() => {
                         handleCancelAppointment();
-                    }} autoFocus>
+                    }}
+                        autoFocus
+                        loading={isCancelingAppointment}
+                    >
                         Confirm
                     </Button>
                 </DialogActions>
             </Dialog>
-            <Typography variant="h3" gutterBottom>
+            {displayFitnessAppointment.length > 0 && <Typography variant="h3" gutterBottom>
                 Upcoming Classes
-            </Typography>
+            </Typography>}
             {displayFitnessAppointment.map((fitnessAppointment, i) => {
                 return (
-                    <Card sx={{ width: '100%', bgcolor: '#a7a7a7' }} key={i}>
-                        <CardHeader
-                            sx={{
-                                textAlign: 'left'
-                            }}
-                            avatar={
-                                <Avatar src={fitnessAppointment.img} sx={{
-                                    width: 80,
-                                    height: 80,
-                                }} />
-                            }
-                            title={<Box>
-                                <Typography variant="h6" sx={{ color: 'text.secondary' }} gutterBottom>
-                                    {fitnessAppointment.category}
-                                </Typography>
-                                <Typography variant="h5" sx={{ color: '#000000', fontWeight: 'bold' }}>
-                                    {fitnessAppointment.instructor}
-                                </Typography>
-                            </Box>}
-                            subheader={
-                                <Box >
-                                    <Typography variant="h6" sx={{ color: '#000000' }}>
-                                        {dayjs(fitnessAppointment.date).format('DD MMM YYYY')}
-                                    </Typography>
-                                    <Typography variant="h6" sx={{ color: '#000000' }}>
-                                        {fitnessAppointment.time}
-                                    </Typography>
-                                </Box>
-                            }
+                    <Box key={i} width={'100%'}>
+                        <FItnessClassAppointmentsListItem
+                            fitnessAppointment={fitnessAppointment}
+                            onSelectAppointmentId={setSelectedAppointmentId}
+                            handleClickOpenDialog={handleClickOpenDialog}
                         />
-                        <CardContent>
-                            <Typography variant="h5" sx={{ color: 'text.secondary' }}>
-                                {fitnessAppointment.location}
-                            </Typography>
-                            <iframe width="80%" height="600" scrolling="no" src="https://maps.google.com/maps?width=100%25&amp;height=600&amp;hl=en&amp;q=Snap%20Fitness%2024/7%20%E7%81%A3%E4%BB%94%E5%BA%97+(My%20Business%20Name)&amp;t=&amp;z=18&amp;ie=UTF8&amp;iwloc=B&amp;output=embed" title="map">
-                            </iframe>
-                        </CardContent>
-                        <CardActions disableSpacing>
-                            <Button
-                                variant='contained'
-                                color='primary'
-                                onClick={() => {
-                                    setSelectedAppointmentId(fitnessAppointment.appointmentId);
-                                    handleClickOpenDialog();
-                                }}
-                            >
-                                Cancel
-                            </Button>
-                        </CardActions>
-                    </Card>
+                    </Box>
                 )
             })}
         </Box>

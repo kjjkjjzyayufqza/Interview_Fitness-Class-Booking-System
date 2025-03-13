@@ -1,5 +1,5 @@
 import { ListItem, Box, Typography, CardHeader, Avatar, CardActions, Button, Tooltip } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { FitnessClassAppointmentModel, FitnessClassDetailModel } from '../../Model'
 import dayjs from 'dayjs'
 import useUserIsLogin from '../../hook/getUserIsLogin';
@@ -12,6 +12,7 @@ export default function FitnessClassListItem({ data }: {
 }) {
     let navigate = useNavigate();
     const { isLoggedIn, userData } = useUserIsLogin();
+    const [isCreatingBooking, setIsCreatingBooking] = useState<boolean>(false);
     const handleBookingFitnessClass = async () => {
         if (!isLoggedIn) {
             toast.error('You need login before booking', {
@@ -33,6 +34,7 @@ export default function FitnessClassListItem({ data }: {
             createDate: new Date()
         }
         try {
+            setIsCreatingBooking(true);
             // get latest remaining number
             const fitnessClassResponse = await axios.get(`http://localhost:3001/fitnessClass/${data.id}`);
             if (fitnessClassResponse.data.remaining > 0) {
@@ -42,6 +44,7 @@ export default function FitnessClassListItem({ data }: {
                     toast.error('You already book this class', {
                         autoClose: 1000,
                     })
+                    setIsCreatingBooking(false);
                     return;
                 }
                 let remaining = fitnessClassResponse.data.remaining - 1;
@@ -57,9 +60,11 @@ export default function FitnessClassListItem({ data }: {
                         window.location.reload();
                     }
                 })
+                setIsCreatingBooking(false);
             }
         } catch (err) {
-            console.error(err);
+            console.log(err);
+            setIsCreatingBooking(false);
         }
     }
     return (
@@ -108,6 +113,7 @@ export default function FitnessClassListItem({ data }: {
                                 sx={{ bgcolor: '#000000', color: '#ffffff' }}
                                 disabled={data.remaining === 0}
                                 onClick={handleBookingFitnessClass}
+                                loading={isCreatingBooking}
                             >
                                 Book Now
                             </Button>

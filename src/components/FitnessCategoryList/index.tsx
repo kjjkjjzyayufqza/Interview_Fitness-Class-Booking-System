@@ -43,21 +43,7 @@ const fakeCategory: FitnessCategoryModel = {
     }
 }
 
-
 export default function FitnessCategoryList() {
-    const [fitnessClassListData, setFitnessClassListData] = useState<FitnessClassDetailModel[]>([]);
-    const handleGetFitnessClassList = () => {
-        axios.get('http://localhost:3001/fitnessClass')
-            .then(res => {
-                setFitnessClassListData(res.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
-    }
-    useEffect(() => {
-        handleGetFitnessClassList();
-    }, [])
     return (
         <Grid2 container spacing={5}>
             {Object.keys(fakeCategory).map((category, i) => {
@@ -66,7 +52,6 @@ export default function FitnessCategoryList() {
                         title={fakeCategory[category].title}
                         description={fakeCategory[category].description}
                         img={fakeCategory[category].img}
-                        data={fitnessClassListData}
                         bgColor={i % 2 === 0 ? '#323232' : '#505050'}
                     />
                 </Grid2>

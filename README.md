@@ -1,46 +1,61 @@
-# Getting Started with Create React App
+# Project Setup and Run Instructions
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Prerequisites
 
-## Available Scripts
+Make sure you have the following installed on your system:
 
-In the project directory, you can run:
+- **Node.js**: You can download it from [Node.js Official Website](https://nodejs.org/).
+- **pnpm**: Install pnpm globally using the following command:
+  ```bash
+  npm install -g pnpm
+  ```
 
-### `npm start`
+## Getting Started
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Follow these steps to set up and run the React project:
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Step 1: Install Dependencies
 
-### `npm test`
+Run the following command to install all necessary dependencies:
+```bash
+pnpm i
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+This will read the `package.json` file and install all required packages.
 
-### `npm run build`
+### Step 2: Start the Development Server
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+Once the dependencies are installed, start the development server by running:
+```bash
+pnpm start
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### Step 3: Start the Jason Server
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Start the Json server by running:
+```bash
+pnpm json-server --watch db.json --port 3001
+```
 
-### `npm run eject`
+## Additional Notes
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+- If you encounter issues, make sure your `pnpm` version is up to date by running:
+  ```bash
+  pnpm -v
+  ```
+- If the application does not open automatically, manually open your browser and navigate to `http://localhost:3000`.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+## Bonus Features
+- Use React Router for navigation (e.g., protected routes). 
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+- Add loading states during API requests.
 
-## Learn More
+- Implement animations for smoother interactions (e.g., booking/cancelling). 
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Write basic unit tests (e.g., with Jest).
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+- Use TypeScript for type safety.
+
+- Usage of Material UI and style components
